@@ -3,7 +3,9 @@ package repositories
 import (
 	"auth-service/internal/api/models"
 	"context"
+	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
@@ -21,9 +23,16 @@ func NewUserRepository(db *mongo.Database) *UserRepository {
 	}
 }
 
-func (ur *UserRepository) Create(user *models.User) error {
+func (ur *UserRepository) Create(ctx context.Context, user *models.User) error {
+	user.ID = primitive.NewObjectID()
+	user.Metadata = models.Metadata{
+		CreatedAt:     time.Now(),
+		LastUpdated:   time.Now(),
+		AccountStatus: "active",
+		Active:        true,
+	}
 	coll := ur.db.Collection("users")
-	_, err := coll.InsertOne(context.Background(), user)
+	_, err := coll.InsertOne(ctx, user)
 	if err != nil {
 		return err
 	}

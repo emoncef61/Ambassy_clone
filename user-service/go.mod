@@ -3,6 +3,7 @@ module auth-service
 go 1.25.3
 
 require (
+	github.com/go-chi/chi/v5 v5.2.3
 	github.com/joho/godotenv v1.5.1
 	go.mongodb.org/mongo-driver v1.17.4
 	go.mongodb.org/mongo-driver/v2 v2.3.1

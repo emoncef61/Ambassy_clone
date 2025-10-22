@@ -7,7 +7,7 @@ import (
 )
 
 type User struct {
-	ID             primitive.ObjectID `bson:"_id,omitempty"`
+	ID             primitive.ObjectID `bson:"_id,omitempy"`
 	PersonalInfo   PersonalInfo       `bson:"personal_info"`
 	Metadata       Metadata           `bson:"metadata"`
 	ContactDetails ContactDetails     `bson:"contact_details"`
@@ -18,7 +18,7 @@ type PersonalInfo struct {
 	LastName    string `bson:"last_name"`
 	Email       string `bson:"email"`
 	DateOfBirth string `bson:"date_of_birth"`
-	Password    []byte `bson:"password"`
+	Password    []byte `bson:"password" json:"-"`
 }
 
 type ContactDetails struct {

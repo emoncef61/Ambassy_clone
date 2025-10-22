@@ -4,6 +4,7 @@ import (
 	"auth-service/internal/api/models"
 	"auth-service/internal/customerrors"
 	"auth-service/internal/db/repositories"
+	"context"
 	"encoding/json"
 	"net/http"
 
@@ -21,6 +22,7 @@ func NewUserHandler(ur *repositories.UserRepository) *UserHandler {
 }
 
 func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
+
 	var user models.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		customerrors.ErrorResponse(w, r, http.StatusBadRequest, "invalid request payload")
@@ -35,7 +37,7 @@ func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	user.PersonalInfo.Password = hashedPassword
 
-	if err := uh.UserRepository.Create(&user); err != nil {
+	if err := uh.UserRepository.Create(context.Background(), &user); err != nil {
 		customerrors.ServerErrorResponse(w, r, err)
 		return
 	}
