@@ -44,10 +44,12 @@ func (cfg *Config) ParseFlags() error {
 	return nil
 }
 
+// initialize handlers takes repositries and returns handlers
 func (c *Config) InitializeHandlers(r *repositories.Repositories) *handlers.Handlers {
 	return handlers.NewHandlers(r.UserRepository)
 }
 
+// initialize repositires takes a db and returns a repositry
 func (c *Config) InitializeRepositories(db *mongo.Database) *repositories.Repositories {
 	return repositories.NewRepositories(db)
 }

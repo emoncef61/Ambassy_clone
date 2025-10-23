@@ -35,7 +35,7 @@ func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user.PersonalInfo.Password = hashedPassword
+	user.PersonalInfo.Password = string(hashedPassword)
 
 	if err := uh.UserRepository.Create(context.Background(), &user); err != nil {
 		customerrors.ServerErrorResponse(w, r, err)

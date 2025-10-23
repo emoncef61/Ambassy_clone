@@ -18,6 +18,7 @@ import (
 	"go.uber.org/zap"
 )
 
+// Api object is a router with a config, and a waitgroup to wait for backround tasks when shutting down
 type API struct {
 	Router *chi.Mux
 	Config *config.Config
@@ -25,6 +26,7 @@ type API struct {
 	Wg     *sync.WaitGroup
 }
 
+// takes logger, config, and handler and returns an api object
 func NewAPI(log *zap.SugaredLogger, cfg *config.Config, h *handlers.Handlers) *API {
 
 	router := chi.NewRouter()
@@ -37,9 +39,11 @@ func NewAPI(log *zap.SugaredLogger, cfg *config.Config, h *handlers.Handlers) *A
 		Router: router,
 		Logger: log,
 		Config: cfg,
+		Wg:     &sync.WaitGroup{},
 	}
 }
 
+// a methode that implements api object
 func (a *API) Run() error {
 	srv := &http.Server{
 		Addr:         a.Config.Port,
@@ -51,7 +55,7 @@ func (a *API) Run() error {
 
 	shutdownError := make(chan error)
 
-	go func() {
+	go func() { //go routine to recieve signals
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		sign := <-quit
